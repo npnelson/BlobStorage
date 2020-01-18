@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ProjectGuid>c6ef05e9-ec7a-44d7-93ba-4014130449be</ProjectGuid>
+    <RepositoryUrl>https://github.com/npnelson/BlobStorage</RepositoryUrl>
+    <Description>Azure impmentation for BlobStorage Abstractions</Description>
+    <Authors>npnelson</Authors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NETToolBox.BlobStorage.Abstractions\NETToolBox.BlobStorage.Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>

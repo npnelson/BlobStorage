@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ProjectGuid>687057b8-e38e-459d-90c8-d2ac76705c11</ProjectGuid>
+    <RepositoryUrl>https://github.com/npnelson/BlobStorage</RepositoryUrl>
+    <Description>Abstraction layer for blob storage</Description>
+    <Authors>npnelson</Authors>
+  </PropertyGroup>
+
+</Project>
