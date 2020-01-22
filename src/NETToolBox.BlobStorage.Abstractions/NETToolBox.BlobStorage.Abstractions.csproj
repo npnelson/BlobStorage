@@ -7,6 +7,7 @@
     <RepositoryUrl>https://github.com/npnelson/BlobStorage</RepositoryUrl>
     <Description>Abstraction layer for blob storage</Description>
     <Authors>npnelson</Authors>
+    <PackageProjectUrl>https://github.com/npnelson/BlobStorage</PackageProjectUrl>
   </PropertyGroup>
   <ItemGroup>
     <SonarQubeSetting Include="sonar.coverage.exclusions">
