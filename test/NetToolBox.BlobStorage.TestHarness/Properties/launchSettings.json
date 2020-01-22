@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "NetToolBox.BlobStorage.TestHarness": {
+      "commandName": "Project"
+    }
+  }
+}

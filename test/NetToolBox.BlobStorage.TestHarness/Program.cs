@@ -1,14 +1,22 @@
-﻿using System;
+﻿using NetToolBox.BlobStorage.Azure;
+using System;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace NetToolBox.BlobStorage.TestHarness
 {
     class Program
     {
-        static void Main(string[] args)
-        {
-
-        //TODO: test managed service identity authentication
-            Console.WriteLine("Hello World!");
+        static async Task Main(string[] args)
+        {          
+            var blobFactory = new AzureBlobStorageFactory();
+            var blobStorage = blobFactory.GetBlobStorage("mohpreferenceblobstorage", "testcontainer");
+            string blobContents = DateTime.UtcNow.ToString();
+            byte[] byteArray = Encoding.ASCII.GetBytes(blobContents);
+            await blobStorage.StoreBlobAsBytesAsync("testblob.txt",byteArray);
+            Console.WriteLine($"Wrote Blob {blobContents}");
         }
+
+     
     }
 }
