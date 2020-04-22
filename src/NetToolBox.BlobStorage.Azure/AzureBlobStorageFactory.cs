@@ -6,6 +6,7 @@ using System.Collections.Concurrent;
 
 namespace NetToolBox.BlobStorage.Azure
 {
+    //TODO: AddBlobStorageFactoryDIRegistration
     public sealed class AzureBlobStorageFactory : IBlobStorageFactory
     {       
         private readonly ConcurrentDictionary<(string accountName, string containerName), BlobContainerClient> _blobContainerClientDictionary = new ConcurrentDictionary<(string accountName, string containerName), BlobContainerClient>();
