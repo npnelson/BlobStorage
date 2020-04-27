@@ -6,15 +6,15 @@ using System.Collections.Concurrent;
 
 namespace NetToolBox.BlobStorage.Azure
 {
-    //TODO: AddBlobStorageFactoryDIRegistration
+
     public sealed class AzureBlobStorageFactory : IBlobStorageFactory
-    {       
+    {
         private readonly ConcurrentDictionary<(string accountName, string containerName), BlobContainerClient> _blobContainerClientDictionary = new ConcurrentDictionary<(string accountName, string containerName), BlobContainerClient>();
         private readonly ConcurrentDictionary<(string accountName, string containerName), IBlobStorage> _blobStorageDictionary = new ConcurrentDictionary<(string accountName, string containerName), IBlobStorage>();
         public IBlobStorage GetBlobStorage(string accountName, string containerName)
         {
             IBlobStorage retval;
-           
+
 
             if (!_blobContainerClientDictionary.ContainsKey((accountName, containerName)))
             {
@@ -26,9 +26,6 @@ namespace NetToolBox.BlobStorage.Azure
                 containerClient.CreateIfNotExists();
                 _blobContainerClientDictionary.TryAdd((accountName, containerName), containerClient);
                 _blobStorageDictionary.TryAdd((accountName, containerName), new AzureBlobStorage(_blobContainerClientDictionary[(accountName, containerName)]));
-
-                //create container if it doesn't exist
-               
             }
             retval = _blobStorageDictionary[(accountName, containerName)];
             return retval;
