@@ -36,6 +36,12 @@ namespace NetToolBox.BlobStorage.Azure
             return retval;
         }
 
+        public async Task<bool> IsHealthyAsync()
+        {
+            await _blobContainerClient.GetPropertiesAsync(); //we don't care about the properties now, if it comes to caring about the properties, we will have to create an abstraction for blobcontainerproperites
+            return true;
+        }
+
         public async Task StoreBlobAsBytesAsync(string blobPath, byte[] byteArray, CancellationToken cancellationToken = default)
         {
             Stream ms = new MemoryStream(byteArray);
