@@ -38,7 +38,7 @@ namespace NetToolBox.BlobStorage.Azure
 
         public async Task<bool> IsHealthyAsync()
         {
-            await _blobContainerClient.GetPropertiesAsync(); //we don't care about the properties now, if it comes to caring about the properties, we will have to create an abstraction for blobcontainerproperites
+            await _blobContainerClient.GetPropertiesAsync().ConfigureAwait(false); //we don't care about the properties now, if it comes to caring about the properties, we will have to create an abstraction for blobcontainerproperites
             return true;
         }
 
