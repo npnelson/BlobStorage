@@ -11,19 +11,19 @@ namespace NetToolBox.BlobStorage.Azure
 
     public sealed class AzureBlobStorageFactory : IBlobStorageFactory
     {
-        public AzureBlobStorageFactory()
-        {
 
-        }
         /// <summary>
         /// Use this constructor if you want to prime some containers at DI time. Useful for running health checks, especially in Azure Functions where each function instance might not have to refer to each container
         /// </summary>
         /// <param name="containersToRegister"></param>
-        public AzureBlobStorageFactory(List<(string accountName, string containerName)> containersToRegister)
+        public AzureBlobStorageFactory(List<(string accountName, string containerName)>? containersToRegister)
         {
-            foreach (var container in containersToRegister)
+            if (containersToRegister != null)
             {
-                GetBlobStorage(container.accountName, container.containerName, false); //we don't care about the return value, just need to add it           
+                foreach (var container in containersToRegister)
+                {
+                    GetBlobStorage(container.accountName, container.containerName, false); //we don't care about the return value, just need to add it           
+                }
             }
         }
         private readonly ConcurrentDictionary<(string accountName, string containerName), BlobContainerClient> _blobContainerClientDictionary = new ConcurrentDictionary<(string accountName, string containerName), BlobContainerClient>();

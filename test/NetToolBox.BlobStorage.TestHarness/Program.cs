@@ -1,4 +1,6 @@
-﻿using NetToolBox.BlobStorage.Azure;
+﻿using Microsoft.Extensions.DependencyInjection;
+using NetToolBox.BlobStorage.Azure;
+using NETToolBox.BlobStorage.Abstractions;
 using System;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,8 +11,12 @@ namespace NetToolBox.BlobStorage.TestHarness
     {
         static async Task Main(string[] args)
         {
+
+            var sp = new ServiceCollection();
+            sp.AddAzureBlobStorageFactory(new System.Collections.Generic.List<(string accountName, string containerName)> { ("testStorage", "testContainer") });
+            var sc = sp.BuildServiceProvider();
             //var blobFactory = new AzureBlobStorageFactory(new System.Collections.Generic.List<(string accountName, string containerName)> { ("testStorage", "testContainer") });
-            var blobFactory = new AzureBlobStorageFactory();
+            var blobFactory = sc.GetRequiredService<IBlobStorageFactory>();
 
             var blobStorage = blobFactory.GetBlobStorage("validaccount", "testcontainer", false);
             var registrations = blobFactory.GetBlobStorageRegistrations();
