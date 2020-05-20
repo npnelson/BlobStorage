@@ -35,12 +35,19 @@ namespace NetToolBox.BlobStorage.Azure
 
             if (!_blobContainerClientDictionary.ContainsKey((accountName, containerName)))
             {
-                string containerEndpoint = string.Format("https://{0}.blob.core.windows.net/{1}",
-                                                         accountName,
-                                                         containerName);
-                BlobContainerClient containerClient = new BlobContainerClient(new Uri(containerEndpoint),
-                                                                           new DefaultAzureCredential(true)); //call an interactive login until https://github.com/Azure/azure-sdk-for-net/issues/8658 is fixed
-
+                BlobContainerClient containerClient;
+                if (accountName.Equals("UseDevelopmentStorage=true", StringComparison.OrdinalIgnoreCase))
+                {
+                    containerClient = new BlobContainerClient("UseDevelopmentStorage=true", containerName);
+                }
+                else
+                {
+                    string containerEndpoint = string.Format("https://{0}.blob.core.windows.net/{1}",
+                                                             accountName,
+                                                             containerName);
+                    containerClient = new BlobContainerClient(new Uri(containerEndpoint),
+                                                                               new DefaultAzureCredential(true)); //call an interactive login until https://github.com/Azure/azure-sdk-for-net/issues/8658 is fixed
+                }
                 if (createContainerIfNotExists) containerClient.CreateIfNotExists();
 
                 _blobContainerClientDictionary.TryAdd((accountName, containerName), containerClient);
