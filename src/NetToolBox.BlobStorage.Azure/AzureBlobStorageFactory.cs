@@ -40,6 +40,10 @@ namespace NetToolBox.BlobStorage.Azure
                 {
                     containerClient = new BlobContainerClient("UseDevelopmentStorage=true", containerName);
                 }
+                else if (accountName.Contains("DefaultEndPoint", StringComparison.OrdinalIgnoreCase))
+                {
+                    containerClient = new BlobContainerClient(accountName, containerName);
+                }
                 else
                 {
                     string containerEndpoint = string.Format("https://{0}.blob.core.windows.net/{1}",
