@@ -36,7 +36,7 @@ namespace NetToolBox.BlobStorage.Azure
             if (!_blobContainerClientDictionary.ContainsKey((accountName, containerName)))
             {
                 BlobContainerClient containerClient;
-                if (accountName.Equals("UseDevelopmentStorage=true", StringComparison.OrdinalIgnoreCase))
+                if (accountName.Equals("UseDevelopmentStorage=true", StringComparison.OrdinalIgnoreCase) || accountName.Contains("Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==", StringComparison.OrdinalIgnoreCase)) //when running in docker, it comes across as the expanded dev store account https://docs.microsoft.com/en-us/azure/storage/common/storage-use-emulator
                 {
                     containerClient = new BlobContainerClient("UseDevelopmentStorage=true", containerName);
                 }
