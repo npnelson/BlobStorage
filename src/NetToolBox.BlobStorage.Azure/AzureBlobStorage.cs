@@ -12,7 +12,7 @@ namespace NetToolBox.BlobStorage.Azure
     {
         private readonly BlobContainerClient _blobContainerClient;
 
-        internal AzureBlobStorage(BlobContainerClient blobContainerClient)
+        public AzureBlobStorage(BlobContainerClient blobContainerClient)
         {
             _blobContainerClient = blobContainerClient;
         }
@@ -21,7 +21,7 @@ namespace NetToolBox.BlobStorage.Azure
         {
 
             var blob = _blobContainerClient.GetBlobClient(blobPath);
-            using BlobDownloadInfo download = await blob.DownloadAsync(cancellationToken).ConfigureAwait(false);
+            BlobDownloadInfo download = await blob.DownloadAsync(cancellationToken).ConfigureAwait(false); //do not dispose download here with a using statement, it can dispose the stream you are returning
             return download.Content;
         }
 
