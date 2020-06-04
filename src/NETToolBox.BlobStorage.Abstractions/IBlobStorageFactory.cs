@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace NETToolBox.BlobStorage.Abstractions
 {
@@ -13,11 +14,13 @@ namespace NETToolBox.BlobStorage.Abstractions
         /// <param name="createContainerIfNotExists">If true, it will automatically create the container if it doesnt exist, if false, it won't and throw an exception</param>
         /// <returns></returns>
         IBlobStorage GetBlobStorage(string accountName, string containerName, bool createContainerIfNotExists = true);
+        IBlobStorage GetBlobStorage(Uri blobContainerUri);
 
         /// <summary>
         /// Gets all containers registered with the factory
         /// </summary>
         /// <returns></returns>
         List<(string accountName, string containerName)> GetBlobStorageRegistrations();
+
     }
 }

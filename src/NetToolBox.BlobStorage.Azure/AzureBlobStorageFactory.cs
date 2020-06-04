@@ -28,6 +28,27 @@ namespace NetToolBox.BlobStorage.Azure
         }
         private readonly ConcurrentDictionary<(string accountName, string containerName), BlobContainerClient> _blobContainerClientDictionary = new ConcurrentDictionary<(string accountName, string containerName), BlobContainerClient>();
         private readonly ConcurrentDictionary<(string accountName, string containerName), IBlobStorage> _blobStorageDictionary = new ConcurrentDictionary<(string accountName, string containerName), IBlobStorage>();
+        private readonly ConcurrentDictionary<Uri, BlobContainerClient> _blobContainerClientUriDictionary = new ConcurrentDictionary<Uri, BlobContainerClient>();
+        private readonly ConcurrentDictionary<Uri, IBlobStorage> _blobStorageUriDictionary = new ConcurrentDictionary<Uri, IBlobStorage>();
+
+
+        public IBlobStorage GetBlobStorage(Uri blobContainerUri)
+        {
+            IBlobStorage retval;
+
+
+            if (!_blobContainerClientUriDictionary.ContainsKey(blobContainerUri))
+            {
+                BlobContainerClient containerClient;
+
+                containerClient = new BlobContainerClient(blobContainerUri);
+                _blobContainerClientUriDictionary.TryAdd(blobContainerUri, containerClient);
+                _blobStorageUriDictionary.TryAdd(blobContainerUri, new AzureBlobStorage(_blobContainerClientUriDictionary[blobContainerUri]));
+            }
+            retval = _blobStorageUriDictionary[blobContainerUri];
+            return retval;
+        }
+
         public IBlobStorage GetBlobStorage(string accountName, string containerName, bool createContainerIfNotExists = true)
         {
             IBlobStorage retval;
@@ -61,6 +82,11 @@ namespace NetToolBox.BlobStorage.Azure
             return retval;
         }
 
+        /// <summary>
+        /// NOTE: This method will NOT return container registrations registered via a URI. This method is to support healthchecks which should use managedidentity in Azure. Containers registered via URI are typically used in local service scenarioes
+        /// where we can't really run healthchecks anyway. Even those these packages are published publically, we don't really expect anybody to use them outside of us, but this could really trip someone up if they expect register via URI and then use this method
+        /// </summary>
+        /// <returns></returns>
         public List<(string accountName, string containerName)> GetBlobStorageRegistrations()
         {
             var retval = _blobContainerClientDictionary.Keys.ToList();
