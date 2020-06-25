@@ -8,7 +8,15 @@
     <Description>Abstraction layer for blob storage</Description>
     <Authors>npnelson</Authors>
     <PackageProjectUrl>https://github.com/npnelson/BlobStorage</PackageProjectUrl>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+  </ItemGroup>
+  
   <ItemGroup>
     <SonarQubeSetting Include="sonar.coverage.exclusions">
       <Value>**</Value>
