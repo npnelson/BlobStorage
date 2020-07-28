@@ -36,6 +36,14 @@ namespace NetToolBox.BlobStorage.Azure
             return retval;
         }
 
+        public async Task<string> GetContentType(string blobPath, CancellationToken cancellationToken = default)
+        {
+            var blob = _blobContainerClient.GetBlobClient(blobPath);
+            var props = await blob.GetPropertiesAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+            var retval = props.Value.ContentType;
+            return retval;
+        }
+
         public async Task<bool> IsHealthyAsync()
         {
             await _blobContainerClient.GetPropertiesAsync().ConfigureAwait(false); //we don't care about the properties now, if it comes to caring about the properties, we will have to create an abstraction for blobcontainerproperites
@@ -49,13 +57,15 @@ namespace NetToolBox.BlobStorage.Azure
         }
 
 
-
+        public async Task StoreBlobAsStreamAsync(string blobPath, Stream stream, string contentType, CancellationToken cancellationToken = default)
+        {
+            var blob = _blobContainerClient.GetBlobClient(blobPath);
+            await blob.UploadAsync(stream, new BlobHttpHeaders { ContentType = contentType }, cancellationToken: cancellationToken, conditions: null).ConfigureAwait(false);
+        }
         public async Task StoreBlobAsStreamAsync(string blobPath, Stream stream, CancellationToken cancellationToken = default)
         {
-            //documentation indicates uploadblob should overwrite, but it appears not to
-            //workaround by deleting for now
-            await _blobContainerClient.DeleteBlobIfExistsAsync(blobName: blobPath, cancellationToken: cancellationToken).ConfigureAwait(false);
-            await _blobContainerClient.UploadBlobAsync(blobPath, stream, cancellationToken).ConfigureAwait(false);
+            var blob = _blobContainerClient.GetBlobClient(blobPath);
+            await blob.UploadAsync(stream, cancellationToken: cancellationToken, conditions: null).ConfigureAwait(false);
         }
 
         public async Task StoreBlobAsTextAsync(string blobPath, string blobContents, CancellationToken cancellationToken = default)

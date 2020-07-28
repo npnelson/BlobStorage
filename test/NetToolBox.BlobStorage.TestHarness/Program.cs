@@ -2,7 +2,7 @@
 using NetToolBox.BlobStorage.Azure;
 using NETToolBox.BlobStorage.Abstractions;
 using System;
-using System.Text;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace NetToolBox.BlobStorage.TestHarness
@@ -19,16 +19,19 @@ namespace NetToolBox.BlobStorage.TestHarness
             //var blobFactory = new AzureBlobStorageFactory(new System.Collections.Generic.List<(string accountName, string containerName)> { ("testStorage", "testContainer") });
             var blobFactory = sc.GetRequiredService<IBlobStorageFactory>();
 
-            var blobStorage = blobFactory.GetBlobStorage(new Uri("https://testuri"));
+            var blobStorage = blobFactory.GetBlobStorage("", "");
             //var registrations = blobFactory.GetBlobStorageRegistrations();
             //foreach (var container in registrations)
             //{
             //    var retval = await blobFactory.GetBlobStorage(container.accountName, container.containerName).IsHealthyAsync();
             //}
             string blobContents = DateTime.UtcNow.ToString();
-            byte[] byteArray = Encoding.ASCII.GetBytes(blobContents);
-            await blobStorage.StoreBlobAsBytesAsync("testblob.txt", byteArray);
+            var stream = File.OpenRead("");
+            await blobStorage.StoreBlobAsStreamAsync("", stream, "");
+
             Console.WriteLine($"Wrote Blob {blobContents}");
+            var contentType = await blobStorage.GetContentType("");
+            Console.ReadLine();
         }
 
 
