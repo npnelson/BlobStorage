@@ -30,7 +30,7 @@ namespace NetToolBox.BlobStorage.TestHarness
             await blobStorage.StoreBlobAsStreamAsync("", stream, "");
 
             Console.WriteLine($"Wrote Blob {blobContents}");
-            var contentType = await blobStorage.GetContentType("");
+            var contentType = await blobStorage.GetContentTypeAsync("");
             Console.ReadLine();
         }
 

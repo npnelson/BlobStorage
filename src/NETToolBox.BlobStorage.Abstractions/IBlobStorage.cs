@@ -6,7 +6,7 @@ namespace NETToolBox.BlobStorage.Abstractions
 {
     public interface IBlobStorage
     {
-        Task<string> GetContentType(string blobPath, CancellationToken cancellationToken = default);
+        Task<string> GetContentTypeAsync(string blobPath, CancellationToken cancellationToken = default);
         Task<string> DownloadFileAsTextAsync(string blobPath, CancellationToken cancellationToken = default);
         Task StoreBlobAsBytesAsync(string blobPath, byte[] byteArray, CancellationToken cancellationToken = default);
         Task StoreBlobAsTextAsync(string blobPath, string blobContents, CancellationToken cancellationToken = default);

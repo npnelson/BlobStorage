@@ -36,7 +36,7 @@ namespace NetToolBox.BlobStorage.Azure
             return retval;
         }
 
-        public async Task<string> GetContentType(string blobPath, CancellationToken cancellationToken = default)
+        public async Task<string> GetContentTypeAsync(string blobPath, CancellationToken cancellationToken = default)
         {
             var blob = _blobContainerClient.GetBlobClient(blobPath);
             var props = await blob.GetPropertiesAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
