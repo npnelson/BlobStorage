@@ -1,6 +1,7 @@
 ﻿using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using NETToolBox.BlobStorage.Abstractions;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -17,9 +18,19 @@ namespace NetToolBox.BlobStorage.Azure
             _blobContainerClient = blobContainerClient;
         }
 
+        public async Task<List<string>> ListFilesAsync(string prefix, CancellationToken cancellationToken = default)
+        {
+            var retval = new List<string>();
+            var blobResult = _blobContainerClient.GetBlobsAsync(BlobTraits.None, BlobStates.None, prefix, cancellationToken);
+            await foreach (var result in blobResult.ConfigureAwait(false))
+            {
+                retval.Add(result.Name);
+            }
+            return retval;
+        }
+
         public async Task<Stream> DownloadFileAsStreamAsync(string blobPath, CancellationToken cancellationToken = default)
         {
-
             var blob = _blobContainerClient.GetBlobClient(blobPath);
             BlobDownloadInfo download = await blob.DownloadAsync(cancellationToken).ConfigureAwait(false); //do not dispose download here with a using statement, it can dispose the stream you are returning
             return download.Content;
@@ -56,12 +67,12 @@ namespace NetToolBox.BlobStorage.Azure
             await StoreBlobAsStreamAsync(blobPath, ms, cancellationToken).ConfigureAwait(false);
         }
 
-
         public async Task StoreBlobAsStreamAsync(string blobPath, Stream stream, string contentType, CancellationToken cancellationToken = default)
         {
             var blob = _blobContainerClient.GetBlobClient(blobPath);
             await blob.UploadAsync(stream, new BlobHttpHeaders { ContentType = contentType }, cancellationToken: cancellationToken, conditions: null).ConfigureAwait(false);
         }
+
         public async Task StoreBlobAsStreamAsync(string blobPath, Stream stream, CancellationToken cancellationToken = default)
         {
             var blob = _blobContainerClient.GetBlobClient(blobPath);
