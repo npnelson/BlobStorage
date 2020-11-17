@@ -23,6 +23,8 @@ namespace NETToolBox.BlobStorage.Abstractions
 
         Task<List<string>> ListFilesAsync(string prefix, CancellationToken cancellationToken = default);
 
+        Task<bool> ExistsAsync(string blobPath, CancellationToken cancellationToken = default);
+
         /// <summary>
         /// If the container can be accessed, it returns true, if it can't, it will return false or throw an exception
         /// </summary>

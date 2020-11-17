@@ -84,5 +84,12 @@ namespace NetToolBox.BlobStorage.Azure
             byte[] byteArray = Encoding.ASCII.GetBytes(blobContents);
             await StoreBlobAsBytesAsync(blobPath, byteArray, cancellationToken).ConfigureAwait(false);
         }
+
+        public async Task<bool> ExistsAsync(string blobPath, CancellationToken cancellationToken = default)
+        {
+            var blob = _blobContainerClient.GetBlobClient(blobPath);
+            var response = await blob.ExistsAsync(cancellationToken).ConfigureAwait(false);
+            return response.Value;
+        }
     }
 }
