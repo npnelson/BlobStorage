@@ -7,14 +7,13 @@ using System.Threading.Tasks;
 
 namespace NetToolBox.BlobStorage.TestHarness
 {
-    static class Program
+    internal static class Program
     {
-        static async Task Main(string[] args)
+        private static async Task Main(string[] args)
         {
-
             var sp = new ServiceCollection();
             //sp.AddAzureBlobStorageFactory(new System.Collections.Generic.List<(string accountName, string containerName)> { ("testStorage", "testContainer") });
-            sp.AddAzureBlobStorageFactory();
+            sp.AddAzureBlobStorageFactory("");
             var sc = sp.BuildServiceProvider();
             //var blobFactory = new AzureBlobStorageFactory(new System.Collections.Generic.List<(string accountName, string containerName)> { ("testStorage", "testContainer") });
             var blobFactory = sc.GetRequiredService<IBlobStorageFactory>();
@@ -33,7 +32,5 @@ namespace NetToolBox.BlobStorage.TestHarness
             var contentType = await blobStorage.GetContentTypeAsync("");
             Console.ReadLine();
         }
-
-
     }
 }

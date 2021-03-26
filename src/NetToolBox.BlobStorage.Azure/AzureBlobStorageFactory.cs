@@ -8,34 +8,33 @@ using System.Linq;
 
 namespace NetToolBox.BlobStorage.Azure
 {
-
     public sealed class AzureBlobStorageFactory : IBlobStorageFactory
     {
-
         /// <summary>
         /// Use this constructor if you want to prime some containers at DI time. Useful for running health checks, especially in Azure Functions where each function instance might not have to refer to each container
         /// </summary>
         /// <param name="containersToRegister"></param>
-        public AzureBlobStorageFactory(List<(string accountName, string containerName)>? containersToRegister)
+        public AzureBlobStorageFactory(List<(string accountName, string containerName)>? containersToRegister, string? tenant)
         {
+            _tenant = tenant;
             if (containersToRegister != null)
             {
                 foreach (var container in containersToRegister)
                 {
-                    GetBlobStorage(container.accountName, container.containerName, false); //we don't care about the return value, just need to add it           
+                    GetBlobStorage(container.accountName, container.containerName, false); //we don't care about the return value, just need to add it
                 }
             }
         }
+
+        private readonly string? _tenant;
         private readonly ConcurrentDictionary<(string accountName, string containerName), BlobContainerClient> _blobContainerClientDictionary = new ConcurrentDictionary<(string accountName, string containerName), BlobContainerClient>();
         private readonly ConcurrentDictionary<(string accountName, string containerName), IBlobStorage> _blobStorageDictionary = new ConcurrentDictionary<(string accountName, string containerName), IBlobStorage>();
         private readonly ConcurrentDictionary<Uri, BlobContainerClient> _blobContainerClientUriDictionary = new ConcurrentDictionary<Uri, BlobContainerClient>();
         private readonly ConcurrentDictionary<Uri, IBlobStorage> _blobStorageUriDictionary = new ConcurrentDictionary<Uri, IBlobStorage>();
 
-
         public IBlobStorage GetBlobStorage(Uri blobContainerUri)
         {
             IBlobStorage retval;
-
 
             if (!_blobContainerClientUriDictionary.ContainsKey(blobContainerUri))
             {
@@ -53,7 +52,6 @@ namespace NetToolBox.BlobStorage.Azure
         {
             IBlobStorage retval;
 
-
             if (!_blobContainerClientDictionary.ContainsKey((accountName, containerName)))
             {
                 BlobContainerClient containerClient;
@@ -70,8 +68,17 @@ namespace NetToolBox.BlobStorage.Azure
                     string containerEndpoint = string.Format("https://{0}.blob.core.windows.net/{1}",
                                                              accountName,
                                                              containerName);
+
+                    var credentialOptions = new DefaultAzureCredentialOptions();
+
+                    if (_tenant != null) //unfortunately, we need to specify this for developers in external ADs to authenticate from VS and VSCode
+                    {
+                        credentialOptions.VisualStudioTenantId = _tenant;
+                        credentialOptions.VisualStudioCodeTenantId = _tenant;
+                    }
+
                     containerClient = new BlobContainerClient(new Uri(containerEndpoint),
-                                                                               new DefaultAzureCredential(true)); //call an interactive login until https://github.com/Azure/azure-sdk-for-net/issues/8658 is fixed
+                                                                               new DefaultAzureCredential(credentialOptions));
                 }
                 if (createContainerIfNotExists) containerClient.CreateIfNotExists();
 
