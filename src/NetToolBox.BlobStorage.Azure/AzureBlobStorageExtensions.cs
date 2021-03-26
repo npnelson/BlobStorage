@@ -7,12 +7,12 @@ namespace NetToolBox.BlobStorage.Azure
 {
     public static class AzureBlobStorageExtensions
     {
-        public static IServiceCollection AddAzureBlobStorageFactory(this IServiceCollection serviceCollection, string? tenant)
+        public static IServiceCollection AddAzureBlobStorageFactory(this IServiceCollection serviceCollection, string? tenant = null)
         {
             return serviceCollection.AddAzureBlobStorageFactoryInternal(null, tenant);
         }
 
-        public static IServiceCollection AddAzureBlobStorageFactory(this IServiceCollection serviceCollection, List<(string accountName, string containerName)> containersToRegister, string? tenant)
+        public static IServiceCollection AddAzureBlobStorageFactory(this IServiceCollection serviceCollection, List<(string accountName, string containerName)> containersToRegister, string? tenant = null)
         {
             return serviceCollection.AddAzureBlobStorageFactoryInternal(containersToRegister, tenant);
         }
