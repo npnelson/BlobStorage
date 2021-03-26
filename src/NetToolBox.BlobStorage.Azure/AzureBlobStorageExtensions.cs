@@ -7,22 +7,20 @@ namespace NetToolBox.BlobStorage.Azure
 {
     public static class AzureBlobStorageExtensions
     {
-        public static IServiceCollection AddAzureBlobStorageFactory(this IServiceCollection serviceCollection)
+        public static IServiceCollection AddAzureBlobStorageFactory(this IServiceCollection serviceCollection, string? tenant)
         {
-
-            return serviceCollection.AddAzureBlobStorageFactoryInternal(null);
+            return serviceCollection.AddAzureBlobStorageFactoryInternal(null, tenant);
         }
 
-        public static IServiceCollection AddAzureBlobStorageFactory(this IServiceCollection serviceCollection, List<(string accountName, string containerName)> containersToRegister)
+        public static IServiceCollection AddAzureBlobStorageFactory(this IServiceCollection serviceCollection, List<(string accountName, string containerName)> containersToRegister, string? tenant)
         {
-            return serviceCollection.AddAzureBlobStorageFactoryInternal(containersToRegister);
+            return serviceCollection.AddAzureBlobStorageFactoryInternal(containersToRegister, tenant);
         }
 
-        private static IServiceCollection AddAzureBlobStorageFactoryInternal(this IServiceCollection serviceCollection, List<(string accountName, string containerName)>? containersToRegister)
+        private static IServiceCollection AddAzureBlobStorageFactoryInternal(this IServiceCollection serviceCollection, List<(string accountName, string containerName)>? containersToRegister, string? tenant)
         {
-            serviceCollection.TryAddSingleton<IBlobStorageFactory>(new AzureBlobStorageFactory(containersToRegister));
+            serviceCollection.TryAddSingleton<IBlobStorageFactory>(new AzureBlobStorageFactory(containersToRegister, tenant));
             return serviceCollection;
         }
-
     }
 }
