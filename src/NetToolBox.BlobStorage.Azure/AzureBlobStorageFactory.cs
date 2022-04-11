@@ -70,6 +70,7 @@ namespace NetToolBox.BlobStorage.Azure
                                                              containerName);
 
                     var credentialOptions = new DefaultAzureCredentialOptions();
+                    credentialOptions.ExcludeVisualStudioCredential = false;
 
                     if (_tenant != null) //unfortunately, we need to specify this for developers in external ADs to authenticate from VS and VSCode
                     {
